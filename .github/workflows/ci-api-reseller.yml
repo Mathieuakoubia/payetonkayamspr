@@ -40,5 +40,4 @@ jobs:
 
       - name: Lancer les tests Pytest
         run: |
-          export PYTHONPATH=$PYTHONPATH:$(pwd)/app
-          pytest
+          PYTHONPATH=./ pytest
