@@ -8,6 +8,7 @@ on:
   pull_request:
     paths:
       - 'apimspr/apiresellers/**'
+      
 
 jobs:
   test:
@@ -16,6 +17,9 @@ jobs:
     defaults:
       run:
         working-directory: apimspr/apiresellers
+
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
     steps:
       - name: Checkout du code
@@ -31,6 +35,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Ajouter le dossier app au PYTHONPATH
+        run: echo "PYTHONPATH=${{ github.workspace }}/apimspr/apiresellers/app" >> $GITHUB_ENV
+
       - name: Lancer les tests Pytest
         run: |
           pytest
+
