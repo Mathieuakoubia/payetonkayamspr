@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+.env
+
+# Flutter
+build/
+.dart_tool/
+.packages
+.pub-cache/
+.idea/
+
+# VSCode
+.vscode/
+
+
+*.log
+.DS_Store

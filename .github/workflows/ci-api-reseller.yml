@@ -1,0 +1,36 @@
+name: CI - API Reseller
+
+on:
+  push:
+    paths:
+      - 'apimspr/apiresellers/**'
+      - '.github/workflows/ci-api-reseller.yml'
+  pull_request:
+    paths:
+      - 'apimspr/apiresellers/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: apimspr/apiresellers
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: installation dépendances
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Lancer les tests Pytest
+        run: |
+          pytest
