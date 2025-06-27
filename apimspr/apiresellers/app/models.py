@@ -11,27 +11,27 @@ class Reseller(Base):
     last_name = Column(String(50))
     address = Column(Text)
     email = Column(String(100), unique=True, nullable=False)
-    api_key = Column(String(100), unique=True, index=True)
-    created_at = Column(TIMESTAMP)
     is_active = Column(Boolean, default=True)
+    created_at = Column(TIMESTAMP)
 
-    
+    # Reseller
+    api_keys = relationship("ApiKey", back_populates="reseller")
 
-    products = relationship("Product", back_populates="reseller")
 
 
 class Customer(Base):
     __tablename__ = "customers"
-    __table_args__ = {'extend_existing': True}
-    
     id = Column(Integer, primary_key=True, index=True)
     first_name = Column(String(50))
     last_name = Column(String(50))
     address = Column(Text)
     birthdate = Column(Date)
-    email = Column(String(100))  # <-- ajout ici
+    email = Column(Text)
+    is_active = Column(Boolean, default=True)
 
     orders = relationship("Order", back_populates="customer")
+
+
 
 
 
@@ -40,14 +40,30 @@ class Product(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100))
     description = Column(Text)
-    category = Column(String(50))
-    price = Column(Numeric(10,2))
+    category_id = Column(Integer, ForeignKey("categories.id", ondelete="SET NULL"))
+    price = Column(Numeric(10, 2))
     image = Column(Text)
-    reseller_id = Column(Integer, ForeignKey("resellers.id"), nullable=True)
 
-    reseller = relationship("Reseller", back_populates="products")
     stock = relationship("Stock", back_populates="product", uselist=False)
     order_items = relationship("OrderItem", back_populates="product")
+
+class Category(Base):
+    __tablename__ = "categories"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(100), unique=True)
+
+class ApiKey(Base):
+    __tablename__ = "api_keys"
+    id = Column(Integer, primary_key=True, index=True)
+    key_hash = Column(String(255), nullable=False, unique=True)
+    type = Column(String(20), nullable=False)
+    reseller_id = Column(Integer, ForeignKey("resellers.id", ondelete="CASCADE"), nullable=True)
+    revoked = Column(Boolean, default=False)
+    created_at = Column(TIMESTAMP)
+
+    # ApiKey
+    reseller = relationship("Reseller", back_populates="api_keys")
+
 
 class Stock(Base):
     __tablename__ = "stock"
@@ -79,3 +95,12 @@ class OrderItem(Base):
 
     order = relationship("Order", back_populates="items")
     product = relationship("Product", back_populates="order_items")
+
+class Prospect(Base):
+    __tablename__ = "prospects"
+    id = Column(Integer, primary_key=True, index=True)
+    first_name = Column(String(50))
+    last_name = Column(String(50))
+    address = Column(Text)
+    birthdate = Column(Date)
+    email = Column(Text)

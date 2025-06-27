@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import Optional, List
 from datetime import date, datetime
 
-
+# ---------------------- Reseller ----------------------
 class ResellerBase(BaseModel):
     first_name: str
     last_name: str
@@ -14,21 +14,50 @@ class ResellerCreate(ResellerBase):
 
 class ResellerOut(ResellerBase):
     id: int
-    api_key: str
+    is_active: bool
     created_at: datetime
 
     class Config:
         from_attributes = True
 
 
+# ---------------------- Api Key ----------------------
+class ApiKeyBase(BaseModel):
+    key_hash: str
+    type: str  # 'reseller' ou 'webshop'
+    reseller_id: Optional[int] = None
+
+class ApiKeyCreate(ApiKeyBase):
+    pass
+
+class ApiKeyOut(ApiKeyBase):
+    id: int
+    revoked: bool
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
 
 
-from pydantic import BaseModel
+# ---------------------- Category ----------------------
+class CategoryBase(BaseModel):
+    name: str
 
+class CategoryCreate(CategoryBase):
+    pass
+
+class CategoryOut(CategoryBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+
+# ---------------------- Product ----------------------
 class ProductBase(BaseModel):
     name: str
     description: str
-    category: str
+    category_id: int
     price: float
     image: str
 
@@ -42,7 +71,7 @@ class Product(ProductBase):
         from_attributes = True
 
 
-
+# ---------------------- Stock ----------------------
 class StockBase(BaseModel):
     quantity: int
 
@@ -61,6 +90,7 @@ class StockOut(StockBase):
         from_attributes = True
 
 
+# ---------------------- Customer ----------------------
 class CustomerBase(BaseModel):
     first_name: str
     last_name: str
@@ -73,13 +103,15 @@ class CustomerCreate(CustomerBase):
 
 class CustomerOut(CustomerBase):
     id: int
+    is_active: bool
 
     class Config:
         from_attributes = True
 
+
 # ---------------------- Order ----------------------
 class OrderBase(BaseModel):
-    order_number:  Optional[str] = None
+    order_number: Optional[str] = None
     customer_id: int
 
 class OrderCreate(OrderBase):
@@ -92,6 +124,7 @@ class OrderOut(OrderBase):
     class Config:
         from_attributes = True
 
+
 # ---------------------- Order Item ----------------------
 class OrderItemBase(BaseModel):
     order_id: int
@@ -103,6 +136,24 @@ class OrderItemCreate(OrderItemBase):
     pass
 
 class OrderItemOut(OrderItemBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+
+# ---------------------- Prospect ----------------------
+class ProspectBase(BaseModel):
+    first_name: str
+    last_name: str
+    address: str
+    birthdate: date
+    email: str
+
+class ProspectCreate(ProspectBase):
+    pass
+
+class ProspectOut(ProspectBase):
     id: int
 
     class Config:
