@@ -5,21 +5,18 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Connexion à la base principale PostgreSQL
+DATABASE_URL = os.getenv("DATABASE_URL").replace("postgresql://", "postgresql+psycopg2://")
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 
-DATABASE_URL_1 = os.getenv("DATABASE_URL").replace("postgresql://", "postgresql+psycopg2://")
-engine_1 = create_engine(DATABASE_URL_1)
-SessionLocal_1 = sessionmaker(bind=engine_1, autocommit=False, autoflush=False)
-
-
-# Modèle commun 
+# Déclaration des modèles
 Base = declarative_base()
 
-# Dépendances FastAPI
+# Dépendance utilisée dans l'API (FastAPI)
 def get_db():
-    db = SessionLocal_1()
+    db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
-
-
