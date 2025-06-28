@@ -1,0 +1,29 @@
+name: Flutter CI Mobile
+
+on:
+  push:
+    paths:
+      - 'mobile_app/**'
+  pull_request:
+    paths:
+      - 'mobile_app/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.13.0'
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+        working-directory: mobile_app/payetonkawa_app_flutter
+
+      - name: Run build (Android)
+        run: flutter build apk --debug
+        working-directory: mobile_app/payetonkawa_app_flutter
