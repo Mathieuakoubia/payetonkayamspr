@@ -212,6 +212,7 @@ def delete_order(db: Session, order_id: int):
     if not order:
         raise HTTPException(status_code=404, detail="Commande introuvable")
     db.delete(order)
+    
     db.commit()
     return {"message": "Commande supprimée avec succès"}
 
