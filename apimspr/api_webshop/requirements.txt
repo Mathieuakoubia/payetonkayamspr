@@ -13,3 +13,4 @@ pytest
 python-jose
 httpx
 supabase
+python-multipart
