@@ -6,7 +6,7 @@ import os
 from .. import schemas, crud
 from app.databases import get_db
 from app.dependencies import verify_webshop_key
-from app.supabase_client import supabase
+from app.supabase_client import get_supabase_client
 
 
 
@@ -43,7 +43,7 @@ async def upload_image(product_id: int, file: UploadFile = File(...), db: Sessio
     file_ext = file.filename.split('.')[-1]
     file_path = f"products/{product_id}.{file_ext}"
 
-   
+    supabase = get_supabase_client()
     bucket = supabase.storage.from_("payetonkayaimages")
     # Supprime le fichier existant s'il y en a un
     try:
