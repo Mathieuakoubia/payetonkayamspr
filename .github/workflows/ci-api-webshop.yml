@@ -19,6 +19,8 @@ jobs:
     env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           WEBSHOP_API_KEY: ${{ secrets.WEBSHOP_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
 
     steps:
       - name: Checkout code
