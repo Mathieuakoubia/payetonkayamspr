@@ -12,3 +12,4 @@ pillow
 pytest
 python-jose
 httpx
+supabase

@@ -197,6 +197,21 @@ def get_prospect_by_id(db: Session, prospect_id: int):
         raise HTTPException(status_code=404, detail="Prospect introuvable")
     return prospect
 
+def get_all_orders(db: Session):
+    return db.query(models.Order).all()
+
+def get_order_by_id(db: Session, order_id: int):
+    order = db.query(models.Order).filter(models.Order.id == order_id).first()
+    if not order:
+        raise HTTPException(status_code=404, detail="Commande introuvable")
+    return order
+
+def get_order_by_order_number(db: Session, order_number: str):
+    order = db.query(models.Order).filter(models.Order.order_number == order_number).first()
+    if not order:
+        raise HTTPException(status_code=404, detail="Commande introuvable avec ce numéro")
+    return order
+
 def update_order(db: Session, order_id: int, updates: schemas.OrderUpdate):
     order = db.query(models.Order).filter(models.Order.id == order_id).first()
     if not order:
