@@ -52,7 +52,7 @@ def update_reseller(
         raise HTTPException(status_code=404, detail="Revendeur non trouvé")
     return db_reseller
 
-# 6. Supprimer : PROTÉGÉ
+# Supprimer : PROTÉGÉ
 @router.delete("/{reseller_id}", status_code=204)
 def delete_reseller(
     reseller_id: int,

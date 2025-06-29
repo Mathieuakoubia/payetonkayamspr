@@ -55,7 +55,7 @@ def test_get_product_returns_all_products(db):
         category_id=1,
         image="image.jpg"
     )
-    # Ajoute la catégorie pour éviter clé étrangère cassée (si tu as FK)
+    # Ajoute la catégorie pour éviter clé étrangère cassée 
     from app.models import Category
     category = Category(name="Boissons")
     db.add(category)
@@ -65,7 +65,7 @@ def test_get_product_returns_all_products(db):
     new_product.category_id = category.id
     crud.create_product(db, new_product)
 
-    # 3. Vérifie que le produit a été ajouté
+    #  Vérifie que le produit a été ajouté
     products = crud.get_product(db)
     assert len(products) == 1
     assert products[0].name == "Café Bio"

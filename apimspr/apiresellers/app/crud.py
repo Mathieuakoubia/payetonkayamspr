@@ -96,6 +96,26 @@ def send_email_with_qrcode(to_email: str, qr_code_path: str):
     except Exception as e:
         print(f"Erreur lors de l'envoi de l'e-mail : {e}")
 
+def update_reseller(db: Session, reseller_id: int, reseller_data: schemas.ResellerCreate):
+    reseller = db.query(models.Reseller).filter(models.Reseller.id == reseller_id).first()
+    if not reseller:
+        return None
+    reseller.first_name = reseller_data.first_name
+    reseller.last_name = reseller_data.last_name
+    reseller.address = reseller_data.address
+    reseller.email = reseller_data.email
+    db.commit()
+    db.refresh(reseller)
+    return reseller
+
+def delete_reseller(db: Session, reseller_id: int):
+    reseller = db.query(models.Reseller).filter(models.Reseller.id == reseller_id).first()
+    if not reseller:
+        return False
+    db.delete(reseller)
+    db.commit()
+    return True
+
 # ---------------------- Product ----------------------
 
 def create_product(db: Session, product: schemas.ProductCreate):
@@ -111,45 +131,24 @@ def get_product(db: Session):
 def get_product_by_id(db: Session, product_id: int):
     return db.query(models.Product).filter(models.Product.id == product_id).first()
 
-# ---------------------- Stock ----------------------
 
-def update_stock(db: Session, product_id: int, quantity: int):
-    stock = db.query(models.Stock).filter(models.Stock.product_id == product_id).first()
-    if not stock:
-        raise HTTPException(status_code=404, detail="Stock introuvable")
-    stock.quantity = quantity
-    stock.last_updated = datetime.now()
-    db.commit()
-    db.refresh(stock)
-    return stock
+def get_products_by_category(db: Session, category_id: int):
+    return db.query(models.Product).filter(models.Product.category_id == category_id).all()
 
-# ---------------------- Orders ----------------------
 
-def get_orders_by_customer(db: Session, customer_id: int):
-    return db.query(models.Order).filter(models.Order.customer_id == customer_id).all()
+#  Stock
 
-def create_order(db: Session, order_data: schemas.OrderCreate):
-    db_order = models.Order(**order_data.dict(), created_at=datetime.now())
-    db.add(db_order)
-    db.commit()
-    db.refresh(db_order)
-    return db_order
+def get_all_stock(db: Session):
+    return db.query(models.Stock).all()
 
-# ---------------------- Utils ----------------------
+def get_stock_by_product_id(db: Session, product_id: int):
+    return db.query(models.Stock).filter(models.Stock.product_id == product_id).first()
 
-def create_category(db: Session, category: schemas.CategoryCreate):
-    db_cat = models.Category(**category.dict())
-    db.add(db_cat)
-    db.commit()
-    db.refresh(db_cat)
-    return db_cat
+
+#  categories
+
 
 def get_all_categories(db: Session):
     return db.query(models.Category).all()
 
-def create_customer(db: Session, customer: schemas.CustomerCreate):
-    db_cust = models.Customer(**customer.dict(), is_active=True)
-    db.add(db_cust)
-    db.commit()
-    db.refresh(db_cust)
-    return db_cust
+

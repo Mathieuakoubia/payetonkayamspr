@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.Databases import engine
 from app.dependencies import get_db
-from app.routers import resellers, products, stocks, orders, orders_items, customers
+from app.routers import resellers, products, stocks, orders_items, categories
 
 from app.models import Base  # Assure-toi que Base est importé ici
 
@@ -26,8 +26,7 @@ app.add_middleware(
 
 # Inclusion des routes
 app.include_router(resellers.router, prefix="/resellers", tags=["Resellers"])
-app.include_router(customers.router)
 app.include_router(products.router)
-app.include_router(orders.router)
 app.include_router(stocks.router)
 app.include_router(orders_items.router)
+app.include_router(categories.router)

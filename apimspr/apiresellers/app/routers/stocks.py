@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app import models, schemas
+from app import models, schemas, crud
 from app.dependencies import get_db, get_current_reseller
 
 router = APIRouter(
@@ -14,14 +14,15 @@ def get_all_stock(
     db: Session = Depends(get_db),
     reseller: models.Reseller = Depends(get_current_reseller)
 ):
-    return db.query(models.Stock).all()
+    return crud.get_all_stock(db)
+
 @router.get("/{product_id}", response_model=schemas.StockOut)
 def get_stock_by_product_id(
     product_id: int,
     db: Session = Depends(get_db),
     reseller: models.Reseller = Depends(get_current_reseller)
 ):
-    stock = db.query(models.Stock).filter(models.Stock.product_id == product_id).first()
+    stock = crud.get_stock_by_product_id(db, product_id)
     if not stock:
         raise HTTPException(status_code=404, detail="Stock introuvable pour ce produit")
     return stock
