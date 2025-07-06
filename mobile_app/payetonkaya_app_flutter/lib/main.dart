@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'qr_scan_page.dart'; // Ce sera ta page de scan
+import 'qr_scan_page.dart';
+import 'register_page.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,6 +13,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'PayeTonKawa',
       theme: ThemeData(primarySwatch: Colors.teal),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('fr', 'FR'),
+      ],
       home: HomePage(),
     );
   }
@@ -24,6 +34,13 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  void _goToRegister(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => RegisterPage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,17 +50,12 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-              onPressed: () => _goToScanner(context), // pour connexion
+              onPressed: () => _goToScanner(context),
               child: Text('Connexion'),
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                // TODO: Créer une page d'inscription plus tard
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Inscription à venir...')),
-                );
-              },
+              onPressed: () => _goToRegister(context),
               child: Text('Inscription'),
             ),
           ],

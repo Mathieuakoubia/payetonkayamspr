@@ -7,8 +7,7 @@ class ProductDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final String modelFileName = product['image']; // par exemple "colombien.glb"
-    //final String modelUrl = 'https://res.cloudinary.com/toncompte/image/upload/$modelFileName';
+    
     final String modelUrl = "https://github.com/KhronosGroup/glTF-Sample-Models/blob/main/2.0/Duck/glTF-Binary/Duck.glb";
 
 
