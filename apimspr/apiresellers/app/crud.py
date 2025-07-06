@@ -14,7 +14,7 @@ from hashlib import sha1
 from . import models
 from . import schemas
 
-# ---------------------- Reseller ----------------------
+# Reseller 
 
 def is_api_key_unique(db: Session, key_hash: str) -> bool:
     return not db.query(models.ApiKey).filter(models.ApiKey.key_hash == key_hash).first()
@@ -29,7 +29,12 @@ def get_reseller_by_api_key(db: Session, api_key: str):
     return key.reseller if key and key.reseller else None
 
 def create_reseller(db: Session, reseller: schemas.ResellerCreate):
-    # 1. Créer le revendeur
+    # Vérifier si l'email existe déjà
+    existing = db.query(models.Reseller).filter(models.Reseller.email == reseller.email).first()
+    if existing:
+        raise HTTPException(status_code=409, detail="Email déjà existant")
+
+    # Créer le revendeur
     db_reseller = models.Reseller(
         first_name=reseller.first_name,
         last_name=reseller.last_name,
@@ -41,11 +46,11 @@ def create_reseller(db: Session, reseller: schemas.ResellerCreate):
     db.commit()
     db.refresh(db_reseller)
 
-    # 2. Générer une clé unique
+    # Générer une clé unique
     raw_key = secrets.token_urlsafe(32)
     key_hash = sha1(raw_key.encode()).hexdigest()
 
-    # 3. Enregistrer la clé hashée
+    # Enregistrer la clé hashée
     db_key = models.ApiKey(
         key_hash=key_hash,
         type="reseller",
@@ -55,7 +60,7 @@ def create_reseller(db: Session, reseller: schemas.ResellerCreate):
     db.add(db_key)
     db.commit()
 
-    # 4. Générer et envoyer le QR code
+    # Générer et envoyer le QR code
     qr_data = f"{raw_key}"
     qr_path = f"qrcodes/{db_reseller.first_name}_{db_reseller.last_name}.png"
     os.makedirs("qrcodes", exist_ok=True)
@@ -116,7 +121,7 @@ def delete_reseller(db: Session, reseller_id: int):
     db.commit()
     return True
 
-# ---------------------- Product ----------------------
+#  Product 
 
 def create_product(db: Session, product: schemas.ProductCreate):
     db_product = models.Product(**product.dict())

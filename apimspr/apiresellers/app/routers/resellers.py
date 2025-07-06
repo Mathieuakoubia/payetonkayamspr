@@ -6,7 +6,7 @@ from app.dependencies import get_db, get_current_reseller
 router = APIRouter()
 print(" app.routers.resellers bien importé")
 
-# 1. Créer un revendeur : PUBLIC
+#  Créer un revendeur : PUBLIC
 @router.post("/",status_code=201, response_model=schemas.ResellerOut)
 def create_reseller(reseller: schemas.ResellerCreate, db: Session = Depends(get_db)):
     return crud.create_reseller(db, reseller)
@@ -19,7 +19,7 @@ def get_reseller_by_api_key(api_key: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Revendeur introuvable ou clé invalide")
     return reseller
 
-# 3. Lire tous les revendeurs : PROTÉGÉ
+# 3. Lire tous les revendeurs 
 @router.get("/", response_model=list[schemas.ResellerOut])
 def read_resellers(
     db: Session = Depends(get_db),
@@ -27,7 +27,7 @@ def read_resellers(
 ):
     return db.query(models.Reseller).all()
 
-# 4. Lire un revendeur par ID : PROTÉGÉ
+# 4. Lire un revendeur par ID 
 @router.get("/{reseller_id}", response_model=schemas.ResellerOut)
 def read_reseller(
     reseller_id: int,
@@ -39,7 +39,7 @@ def read_reseller(
         raise HTTPException(status_code=404, detail="Revendeur introuvable")
     return db_reseller
 
-# 5. Mettre à jour : PROTÉGÉ
+# 5. Mettre à jour 
 @router.put("/{reseller_id}", response_model=schemas.ResellerOut)
 def update_reseller(
     reseller_id: int,
@@ -52,7 +52,7 @@ def update_reseller(
         raise HTTPException(status_code=404, detail="Revendeur non trouvé")
     return db_reseller
 
-# Supprimer : PROTÉGÉ
+# Supprimer
 @router.delete("/{reseller_id}", status_code=204)
 def delete_reseller(
     reseller_id: int,
