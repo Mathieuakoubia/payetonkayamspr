@@ -5,7 +5,10 @@ import 'product_detail_page.dart';
 
 class ProductsPage extends StatefulWidget {
   final String apiKey;
-  ProductsPage({required this.apiKey});
+  final http.Client httpClient;
+
+  ProductsPage({required this.apiKey, http.Client? httpClient})
+      : httpClient = httpClient ?? http.Client();
 
   @override
   _ProductsPageState createState() => _ProductsPageState();
@@ -21,7 +24,7 @@ class _ProductsPageState extends State<ProductsPage> {
   }
 
   Future<void> fetchProducts() async {
-    final response = await http.get(
+    final response = await widget.httpClient.get(
       Uri.parse('https://apirevendeurmspr.onrender.com/products/'),
       headers: {'X-API-Key': widget.apiKey},
     );
@@ -43,23 +46,23 @@ class _ProductsPageState extends State<ProductsPage> {
       body: products.isEmpty
           ? Center(child: CircularProgressIndicator())
           : ListView.builder(
-        itemCount: products.length,
-        itemBuilder: (context, index) {
-          var product = products[index];
-          return ListTile(
-            title: Text(product['name'] ?? 'Produit inconnu'),
-            subtitle: Text("Catégorie ID : ${product['category_id']}"),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => ProductDetailPage(product: product),
-                ),
-              );
-            },
-          );
-        },
-      ),
+              itemCount: products.length,
+              itemBuilder: (context, index) {
+                var product = products[index];
+                return ListTile(
+                  title: Text(product['name'] ?? 'Produit inconnu'),
+                  subtitle: Text("Prix : ${product['price']} €"),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ProductDetailPage(product: product),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
     );
   }
 }
