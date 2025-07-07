@@ -10,10 +10,10 @@ DATABASE_URL = os.getenv("DATABASE_URL").replace("postgresql://", "postgresql+ps
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 
-# Déclaration des modèles
+
 Base = declarative_base()
 
-# Dépendance utilisée dans l'API (FastAPI)
+# Dépendance utilisée dans l'API
 def get_db():
     db = SessionLocal()
     try:

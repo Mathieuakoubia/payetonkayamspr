@@ -11,7 +11,7 @@ print(" app.routers.resellers bien importé")
 def create_reseller(reseller: schemas.ResellerCreate, db: Session = Depends(get_db)):
     return crud.create_reseller(db, reseller)
 
-# 2. Obtenir un revendeur par API key : PUBLIC
+# Obtenir un revendeur par API key : PUBLIC
 @router.get("/by_key/{api_key}", response_model=schemas.ResellerOut)
 def get_reseller_by_api_key(api_key: str, db: Session = Depends(get_db)):
     reseller = crud.get_reseller_by_api_key(db, api_key)
@@ -19,7 +19,7 @@ def get_reseller_by_api_key(api_key: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Revendeur introuvable ou clé invalide")
     return reseller
 
-# 3. Lire tous les revendeurs 
+# Lire tous les revendeurs 
 @router.get("/", response_model=list[schemas.ResellerOut])
 def read_resellers(
     db: Session = Depends(get_db),
@@ -27,7 +27,7 @@ def read_resellers(
 ):
     return db.query(models.Reseller).all()
 
-# 4. Lire un revendeur par ID 
+# Lire un revendeur par ID 
 @router.get("/{reseller_id}", response_model=schemas.ResellerOut)
 def read_reseller(
     reseller_id: int,
@@ -39,7 +39,7 @@ def read_reseller(
         raise HTTPException(status_code=404, detail="Revendeur introuvable")
     return db_reseller
 
-# 5. Mettre à jour 
+# Mettre à jour 
 @router.put("/{reseller_id}", response_model=schemas.ResellerOut)
 def update_reseller(
     reseller_id: int,

@@ -72,8 +72,8 @@ def create_reseller(db: Session, reseller: schemas.ResellerCreate):
     return db_reseller
 
 def send_email_with_qrcode(to_email: str, qr_code_path: str):
-    from_email = "matheothedon@gmail.com"
-    password = "gopu zgei jvjy msrh"
+    from_email = os.getenv("EMAIL_USER")
+    password = os.getenv("EMAIL_PASS")
     subject = "Votre QR Code pour l'authentification"
 
     message = MIMEMultipart()
@@ -81,7 +81,7 @@ def send_email_with_qrcode(to_email: str, qr_code_path: str):
     message['To'] = to_email
     message['Subject'] = subject
 
-    body = "Veuillez scanner ce QR Code pour vous connecter à l'application."
+    body = "Veuillez scanner ce QR Code pour vous connecter à l'application payetonkaya."
     message.attach(MIMEText(body, 'plain'))
 
     with open(qr_code_path, "rb") as attachment:
